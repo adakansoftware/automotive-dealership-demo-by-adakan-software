@@ -85,4 +85,14 @@ Bulgu kodları `docs/ARCHITECTURE_AUDIT.md` ile eşleşir.
   - `data/site-config.ts` oluşturuldu; `site.tsx` + `iletisim` hardcoded bilgi içermez.
   - Footer telif yılı dinamik.
   - Doğrulama: `tsc --noEmit` temiz, `next build` temiz (12 rota).
-- FAZ 2+: bekliyor — onay sonrası uygulanır.
+- FAZ 2 (Mimari İyileştirme): ✅ tamamlandı.
+  - Header/Footer root layout'a taşındı; hiçbir sayfa manuel render etmiyor (M1).
+  - `components/site.tsx` parçalandı: `layout/header.tsx`, `layout/footer.tsx`, `vehicles/vehicle-card.tsx`, `vehicles/inquiry-bar.tsx`, `vehicles/inventory-filters.tsx`, `ui/select-field.tsx` (M1).
+  - `lib/vehicles.ts`: `getVehicles`, `getVehicleBySlug`, `getFeaturedVehicles`, `getRelatedVehicles` (marka+kasa+fiyat puanlaması), `filterVehicles`, `sortVehicles` (M2). Sayfalar `data/vehicles` dizisine doğrudan erişmiyor.
+  - `lib/format.ts`: `formatPrice`, `formatMileage` (M8).
+  - `types/vehicle.ts`: `Vehicle`, `VehicleStatus`, `VehicleCondition` + yakıt/vites/kasa literal union tipleri; `any` yok (M3, H7).
+  - Dead code: `components/ui/button.tsx`, `lib/utils.ts`, `components/site.tsx` silindi; `shadcn`, `@base-ui/react`, `class-variance-authority`, `clsx`, `tailwind-merge`, `tw-animate-css` kaldırıldı; `globals.css` import'ları temizlendi (M6). shadcn ileride gerekirse devDependency olarak geri eklenir.
+  - `/araclar` sunucu/istemci sınırı: filtre paneli istemci (`inventory-filters.tsx`), liste + sayı + boş durum sunucu render; filtre/sıralama URL search params üzerinden (M1, H3'in temeli atıldı — FAZ 3'te geliştirilecek).
+  - Audit: 88 bulgudan 4'e düştü (kalan 4: `next` iç bağımlılık zinciri — browserslist, source-map-js, baseline-browser-mapping; yerel müdahale edilemez, upstream sürüm bekler). `postcss` 8.5.32'ye güncellendi.
+  - Doğrulama: `tsc --noEmit` temiz, `next build` temiz; üretim sunucusunda tüm rotalar 200, geçersiz slug 404, `?brand=Audi` filtresi sunucu tarafında doğru sonuç veriyor.
+- FAZ 3+: bekliyor — onay sonrası uygulanır.

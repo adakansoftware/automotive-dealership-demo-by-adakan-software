@@ -1,19 +1,4 @@
-export type Vehicle = {
-  slug: string
-  brand: string
-  model: string
-  trim: string
-  year: number
-  price: number
-  mileage: number
-  fuel: string
-  transmission: string
-  body: string
-  color: string
-  image: string
-  featured?: boolean
-  description: string
-}
+import type { Vehicle } from '@/types/vehicle'
 
 export const vehicles: Vehicle[] = [
   { slug: 'bmw-7-serisi-740i', brand: 'BMW', model: '7 Serisi', trim: '740i xDrive', year: 2024, price: 8950000, mileage: 12400, fuel: 'Benzin', transmission: 'Otomatik', body: 'Sedan', color: 'Mineral Beyaz', image: 'https://images.unsplash.com/photo-1555215695-3004980ad54e?auto=format&fit=crop&w=1600&q=85', featured: true, description: 'Zamansız bir tasarım, rafine sürüş ve ileri teknoloji.' },
@@ -23,5 +8,3 @@ export const vehicles: Vehicle[] = [
   { slug: 'audi-rs6-avant', brand: 'Audi', model: 'RS 6 Avant', trim: 'Performance', year: 2024, price: 9350000, mileage: 6200, fuel: 'Benzin', transmission: 'Otomatik', body: 'Station Wagon', color: 'Nardo Gri', image: '/vehicles/rs6-4935644.jpg', description: 'Gündelik kullanışlılık ve nefes kesen performans.' },
   { slug: 'volvo-xc90-t8', brand: 'Volvo', model: 'XC90', trim: 'T8 Recharge Ultimate', year: 2023, price: 5680000, mileage: 19300, fuel: 'Hibrit', transmission: 'Otomatik', body: 'SUV', color: 'Kristal Beyaz', image: 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=1600&q=85', description: 'İskandinav sadeliği ve aile yolculukları için dingin güç.' },
 ]
-
-export const featuredVehicles = vehicles.filter((vehicle) => vehicle.featured)

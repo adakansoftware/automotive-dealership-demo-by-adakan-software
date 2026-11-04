@@ -95,4 +95,16 @@ Bulgu kodları `docs/ARCHITECTURE_AUDIT.md` ile eşleşir.
   - `/araclar` sunucu/istemci sınırı: filtre paneli istemci (`inventory-filters.tsx`), liste + sayı + boş durum sunucu render; filtre/sıralama URL search params üzerinden (M1, H3'in temeli atıldı — FAZ 3'te geliştirilecek).
   - Audit: 88 bulgudan 4'e düştü (kalan 4: `next` iç bağımlılık zinciri — browserslist, source-map-js, baseline-browser-mapping; yerel müdahale edilemez, upstream sürüm bekler). `postcss` 8.5.32'ye güncellendi.
   - Doğrulama: `tsc --noEmit` temiz, `next build` temiz; üretim sunucusunda tüm rotalar 200, geçersiz slug 404, `?brand=Audi` filtresi sunucu tarafında doğru sonuç veriyor.
-- FAZ 3+: bekliyor — onay sonrası uygulanır.
+- FAZ 3 (Çekirdek Deneyim): ✅ tamamlandı.
+  - Gelişmiş filtreleme: marka→model bağımlı (marka değişince model sıfırlanır), fiyat/yıl/km aralıkları, yakıt, vites, kasa, durum; tümü URL search params üzerinden sunucu tarafında uygulanır; geçersiz/bozuk parametreler güvenli (sayısal olmayan değer yok sayılır) (H3, H7). Sayısal aralık girişleri blur/Enter'da commit edilir.
+  - Filtre/sıralama URL senkronu: paylaşılan URL aynı sonucu verir; geri/ileri çalışır; "Filtreleri temizle" tüm parametreleri siler; sonuç sayısı sunucudan doğru (H3).
+  - Sıralama: En Yeni, fiyat artan/azalan, km artan — Türkçe etiketli SelectField; ham `price-asc` değeri kullanıcıya görünmez (H4).
+  - Detay sayfası `generateMetadata`: sayfa başlığı + açıklama + OG görseli her araçta (H1). Not: `metadataBase` FAZ 4'te.
+  - Detay sayfası tam özellik tablosu ("Araç künyesi"): yalnızca mevcut veri (durum/sıfat yoksa satır da yok) + durum etiketi (Satışta/Rezerve rozeti) (M3, H7).
+  - Galeri altyapısı: `VehicleImage[]` tipi, `getVehicleImages` (tek görselli araçlara otomatik düşer), thumbnail şeridi, ok tuşları + Escape klavye navigasyonu, tam ekran görüntüleyici (scroll kilidi dahil) (H7). RS6 üç yerel görselle demo.
+  - Benzer araçlar: FAZ 2'de `getRelatedVehicles` (marka+kasa+fiyat puanlaması) olarak yapılmıştı (M4).
+  - Custom `not-found.tsx` (root + `araclar/[slug]`), `error.tsx` (reset + ana sayfa), `loading.tsx` — marka dilinde (H8).
+  - WhatsApp mesajına araç slug'u: `(ata-{slug})` biçiminde (M10).
+  - Doğrulama: `tsc --noEmit` temiz, `next build` temiz; üretim sunucusunda filtre kombinasyonları, geçersiz parametreler, custom 404, metadata, durum rozeti, galeri, WhatsApp slug'u test edildi.
+  - Not: `status` alanı demo verisidir (Range Rover Sport "Rezerve" örnek); gerçek envanter FAZ 6'de DB'den gelir.
+- FAZ 4+: bekliyor — onay sonrası uygulanır.

@@ -1,13 +1,26 @@
 import { vehicles } from '@/data/vehicles'
-import type { Vehicle } from '@/types/vehicle'
+import type { Vehicle, VehicleImage } from '@/types/vehicle'
 
 export interface VehicleFilters {
   brand?: string
+  model?: string
   body?: string
   fuel?: string
+  transmission?: string
+  status?: string
+  priceMin?: number
+  priceMax?: number
+  yearMin?: number
+  yearMax?: number
+  mileageMin?: number
+  mileageMax?: number
 }
 
-export type VehicleSortKey = 'price-asc' | 'price-desc' | 'year-desc'
+export type VehicleSortKey =
+  | 'price-asc'
+  | 'price-desc'
+  | 'mileage-asc'
+  | 'year-desc'
 
 /** Tüm araçlar. Sayfalar `data/vehicles` dizisine doğrudan erişmemeli. */
 export function getVehicles(): Vehicle[] {
@@ -20,6 +33,12 @@ export function getVehicleBySlug(slug: string): Vehicle | undefined {
 
 export function getFeaturedVehicles(): Vehicle[] {
   return vehicles.filter((vehicle) => vehicle.featured)
+}
+
+/** Aracın tam görsel listesi; çoklu görsel yoksa tek anahtar görsel. */
+export function getVehicleImages(vehicle: Vehicle): VehicleImage[] {
+  if (vehicle.images?.length) return vehicle.images
+  return [{ url: vehicle.image, alt: `${vehicle.brand} ${vehicle.model}` }]
 }
 
 /**
@@ -46,8 +65,17 @@ export function filterVehicles(list: Vehicle[], filters: VehicleFilters): Vehicl
   return list.filter(
     (vehicle) =>
       (!filters.brand || vehicle.brand === filters.brand) &&
+      (!filters.model || vehicle.model === filters.model) &&
       (!filters.body || vehicle.body === filters.body) &&
-      (!filters.fuel || vehicle.fuel === filters.fuel),
+      (!filters.fuel || vehicle.fuel === filters.fuel) &&
+      (!filters.transmission || vehicle.transmission === filters.transmission) &&
+      (!filters.status || vehicle.status === filters.status) &&
+      (filters.priceMin === undefined || vehicle.price >= filters.priceMin) &&
+      (filters.priceMax === undefined || vehicle.price <= filters.priceMax) &&
+      (filters.yearMin === undefined || vehicle.year >= filters.yearMin) &&
+      (filters.yearMax === undefined || vehicle.year <= filters.yearMax) &&
+      (filters.mileageMin === undefined || vehicle.mileage >= filters.mileageMin) &&
+      (filters.mileageMax === undefined || vehicle.mileage <= filters.mileageMax),
   )
 }
 
@@ -59,6 +87,9 @@ export function sortVehicles(list: Vehicle[], sort: VehicleSortKey | ''): Vehicl
       break
     case 'price-desc':
       sorted.sort((a, b) => b.price - a.price)
+      break
+    case 'mileage-asc':
+      sorted.sort((a, b) => a.mileage - b.mileage)
       break
     case 'year-desc':
       sorted.sort((a, b) => b.year - a.year)

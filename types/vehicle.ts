@@ -19,6 +19,11 @@ export const VEHICLE_BODY_TYPES = [
 ] as const
 export type VehicleBodyType = (typeof VEHICLE_BODY_TYPES)[number]
 
+export interface VehicleImage {
+  url: string
+  alt?: string
+}
+
 export interface Vehicle {
   slug: string
   brand: string
@@ -32,6 +37,7 @@ export interface Vehicle {
   body: VehicleBodyType
   color: string
   image: string
+  images?: VehicleImage[]
   featured?: boolean
   status?: VehicleStatus
   condition?: VehicleCondition

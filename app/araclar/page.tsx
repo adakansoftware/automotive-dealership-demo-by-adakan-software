@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import { VehicleCard } from '@/components/vehicles/vehicle-card'
 import { InventoryFilters, type InventoryFilterState } from '@/components/vehicles/inventory-filters'
 import {
@@ -6,6 +7,17 @@ import {
   sortVehicles,
   type VehicleSortKey,
 } from '@/lib/vehicles'
+
+export const metadata: Metadata = {
+  title: 'Araçlarımız',
+  description: 'Farklı beklentilere hitap eden, özenle seçilmiş araç koleksiyonumuzu keşfedin.',
+  alternates: { canonical: '/araclar' },
+  openGraph: {
+    title: 'Araçlarımız — Atelier Motors',
+    description: 'Farklı beklentilere hitap eden, özenle seçilmiş araç koleksiyonumuzu keşfedin.',
+    images: [{ url: 'https://images.unsplash.com/photo-1492144534655-ae79c964c9d7?auto=format&fit=crop&w=2000&q=85' }],
+  },
+}
 
 type SearchParams = Record<string, string | string[] | undefined>
 

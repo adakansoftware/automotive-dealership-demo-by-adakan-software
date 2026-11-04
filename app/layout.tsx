@@ -2,12 +2,24 @@ import { Analytics } from '@vercel/analytics/next'
 import type { Metadata, Viewport } from 'next'
 import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
+import { siteConfig } from '@/data/site-config'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'Atelier Motors — Seçkin Otomobiller',
+  metadataBase: new URL(siteConfig.url),
+  title: {
+    default: 'Atelier Motors — Seçkin Otomobiller',
+    template: '%s — Atelier Motors',
+  },
   description: 'Özenle seçilmiş otomobiller ve kişisel bir showroom deneyimi.',
-  generator: 'v0.app',
+  openGraph: {
+    siteName: siteConfig.brand.name,
+    type: 'website',
+    locale: 'tr_TR',
+  },
+  twitter: {
+    card: 'summary_large_image',
+  },
   icons: {
     icon: [
       {

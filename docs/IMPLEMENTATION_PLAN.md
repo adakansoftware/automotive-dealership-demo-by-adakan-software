@@ -107,4 +107,11 @@ Bulgu kodları `docs/ARCHITECTURE_AUDIT.md` ile eşleşir.
   - WhatsApp mesajına araç slug'u: `(ata-{slug})` biçiminde (M10).
   - Doğrulama: `tsc --noEmit` temiz, `next build` temiz; üretim sunucusunda filtre kombinasyonları, geçersiz parametreler, custom 404, metadata, durum rozeti, galeri, WhatsApp slug'u test edildi.
   - Not: `status` alanı demo verisidir (Range Rover Sport "Rezerve" örnek); gerçek envanter FAZ 6'de DB'den gelir.
-- FAZ 4+: bekliyor — onay sonrası uygulanır.
+- FAZ 4 (SEO): ✅ tamamlandı.
+  - `app/sitemap.ts`: 4 statik rota + 6 araç slug'ı; `app/robots.ts`: tüm botlara izin + sitemap referansı (H2).
+  - `metadataBase` site-config'ten (`url` alanı — yer tutucu `https://ateliermotors.example`, gerçek alan adı bekleniyor); title template (`%s — Atelier Motors`); her sayfada canonical + sayfa bazlı metadata; iletişim sayfası server/client bölündü (form `components/contact/contact-form.tsx`) (H1, M7, M9).
+  - OG + Twitter card: tüm sayfalarda; detayda `summary_large_image` + araç görseli (H2).
+  - JSON-LD: anasayfada `AutoDealer` (yalnızca site-config verileri — uydurma rating/review yok), detayda `Car` (fiyat TRY, durum `InStock`/`LimitedAvailability`/`SoldOut` eşlemesi, km, yalnızca mevcut alanlar) (H2).
+  - Admin noindex planı: admin rotaları henüz yok; FAZ 6'de eklenecekleri zaman `robots.ts` `disallow` + sayfa bazlı `robots: { index: false }` uygulanacak (dokümante).
+  - Doğrulama: `tsc --noEmit` + `next build` temiz; smoke test — sitemap 10 URL, robots.txt, canonical/OG/Twitter etiketleri, JSON-LD tipleri, iletişim başlığı.
+- FAZ 5+: bekliyor — onay sonrası uygulanır.

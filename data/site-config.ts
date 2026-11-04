@@ -1,4 +1,6 @@
 export const siteConfig = {
+  // Yer tutucu alan adı — gerçek müşteri bilgisi gelince değiştirilecek.
+  url: 'https://ateliermotors.example',
   brand: {
     name: 'Atelier Motors',
     wordmarkA: 'ATELIER',

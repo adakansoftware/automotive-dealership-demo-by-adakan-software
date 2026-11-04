@@ -77,5 +77,12 @@ Bulgu kodları `docs/ARCHITECTURE_AUDIT.md` ile eşleşir.
 
 ## Durum Takibi
 
-- FAZ 1.1 (git): ✅ tamamlandı.
-- Diğer tüm görevler: bekliyor — onay sonrası uygulanır.
+- FAZ 1 (Stabilizasyon): ✅ tamamlandı.
+  - git init + remote: 7f023a6.
+  - `typescript.ignoreBuildErrors` kaldırıldı; `tsc --noEmit` temiz.
+  - `pnpm audit`: 88 bulgu (1 critical: proxy-addr, tamamı `shadcn` bağımlılık zinciri üzerinden). Çözüm: FAZ 2'de `shadcn` kaldırma — çalışma zamanı kodu etkilemiyor.
+  - `audi-rs6-avant` görseli düzeltildi: yerel `/vehicles/rs6-4935644.jpg` (Range Rover ile ortak Unsplash URL'i kaldırıldı; dikey görseller `public/vehicles/` altında FAZ 3 galeri için saklandı).
+  - `data/site-config.ts` oluşturuldu; `site.tsx` + `iletisim` hardcoded bilgi içermez.
+  - Footer telif yılı dinamik.
+  - Doğrulama: `tsc --noEmit` temiz, `next build` temiz (12 rota).
+- FAZ 2+: bekliyor — onay sonrası uygulanır.

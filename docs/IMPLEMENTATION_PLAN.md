@@ -114,4 +114,11 @@ Bulgu kodları `docs/ARCHITECTURE_AUDIT.md` ile eşleşir.
   - JSON-LD: anasayfada `AutoDealer` (yalnızca site-config verileri — uydurma rating/review yok), detayda `Car` (fiyat TRY, durum `InStock`/`LimitedAvailability`/`SoldOut` eşlemesi, km, yalnızca mevcut alanlar) (H2).
   - Admin noindex planı: admin rotaları henüz yok; FAZ 6'de eklenecekleri zaman `robots.ts` `disallow` + sayfa bazlı `robots: { index: false }` uygulanacak (dokümante).
   - Doğrulama: `tsc --noEmit` + `next build` temiz; smoke test — sitemap 10 URL, robots.txt, canonical/OG/Twitter etiketleri, JSON-LD tipleri, iletişim başlığı.
-- FAZ 5+: bekliyor — onay sonrası uygulanır.
+- FAZ 5 (Cila): ✅ tamamlandı.
+  - `next/image` + `unoptimized: false`; Unsplash `remotePatterns` izinli; kart/galeri/thumbnail `fill` + `sizes` ile optimize (srcset + `/_next/image` doğrulandı); CSS arka plan görselleri (hero/split/about) bilinçli olarak bırak — koddaki kısıt notu (H5).
+  - Mobil menü erişilebilirlik: `aria-expanded` + `aria-controls`, Escape kapatma + toggle'a odak dönüşü, menü açıkken ilk linke odak, scroll kilidi, menü linkleri menüyü kapatır (H9).
+  - `prefers-reduced-motion`: animasyon/geçiş/scroll davranışı kapanır (M5).
+  - İletişim formu: server action (`app/iletisim/actions.ts`) + `useActionState`; istemci (native required/pattern) + sunucu doğrulama; hata erişilebilirliği (`aria-invalid`, `aria-describedby`, `role="alert"`); rate limit mimarisi (in-memory demo, 10 dk/5 istek — üretim Redis/DB dokümante); demo/gerçek gönderim açıkça ayrıştırılmış; sır yok. Not: `'use server'` dosyasından sabit export edilemez — başlangıç durumu `inquiry-state.ts`'de (C2).
+  - Responsive denetim: kod seviyesi 375–1920 + manuel kontrol listesi `docs/RESPONSIVE_AUDIT.md`'de; KVKK yer tutucu planı aynı dosyada (hukuki uyum iddiası yok).
+  - Doğrulama: `tsc --noEmit` + `next build` temiz; smoke — srcset/`/_next/image` 200, `aria-expanded`, server action form POST.
+- FAZ 6+: bekliyor — onay sonrası uygulanır (yalnızca doküman).

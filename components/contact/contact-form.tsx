@@ -1,16 +1,39 @@
 'use client'
 
-import { useState } from 'react'
+import { useActionState } from 'react'
+import { submitInquiry } from '@/app/iletisim/actions'
+import { initialInquiryState } from '@/app/iletisim/inquiry-state'
 
 export function ContactForm() {
-  const [sent, setSent] = useState(false)
-  if (sent) return <div className="intro-copy"><span className="eyebrow">Teşekkürler</span><h3>Mesajınız hazır.</h3><p>Bu frontend demo formudur. Gerçek gönderim için iletişim bilgilerinizi yapılandırabilirsiniz.</p></div>
-  return <form className="contact-form" onSubmit={(e) => { e.preventDefault(); setSent(true) }}>
-    <label>Ad Soyad<input required placeholder="Adınız ve soyadınız"/></label>
-    <label>Telefon<input required placeholder="+90"/></label>
-    <label>E-posta<input type="email" required placeholder="ornek@mail.com"/></label>
-    <label>Mesajınız<textarea required placeholder="Size nasıl yardımcı olabiliriz?"/></label>
-    <button type="submit">Mesaj gönder</button>
-    <small style={{ color: '#777b7e', lineHeight: 1.5 }}>Bu form demo amaçlıdır. Gönderim sonrası başarı durumu gösterilir.</small>
+  const [state, formAction, pending] = useActionState(submitInquiry, initialInquiryState)
+
+  if (state.status === 'success') {
+    return <div className="intro-copy" role="status">
+      <span className="eyebrow">Teşekkürler</span>
+      <h3>Mesajınız alındı.</h3>
+      <p>Sorgunuz doğrulandı. Bu frontend demosunda gerçek gönderim yapılmaz; gönderim sağlayıcısı onay sonrası devreye alınacaktır.</p>
+    </div>
+  }
+
+  return <form className="contact-form" action={formAction}>
+    {state.status === 'rate-limited' && <p className="form-error" role="alert">Çok fazla deneme yaptınız. Lütfen 10 dakika sonra tekrar deneyin.</p>}
+    <label>Ad Soyad
+      <input name="name" required minLength={2} defaultValue={state.values.name} placeholder="Adınız ve soyadınız" aria-invalid={state.errors.name ? true : undefined} aria-describedby={state.errors.name ? 'name-error' : undefined}/>
+      {state.errors.name && <span id="name-error" className="form-error" role="alert">{state.errors.name}</span>}
+    </label>
+    <label>Telefon
+      <input name="phone" required defaultValue={state.values.phone} placeholder="+90 5xx xxx xx xx" aria-invalid={state.errors.phone ? true : undefined} aria-describedby={state.errors.phone ? 'phone-error' : undefined}/>
+      {state.errors.phone && <span id="phone-error" className="form-error" role="alert">{state.errors.phone}</span>}
+    </label>
+    <label>E-posta
+      <input name="email" type="email" required defaultValue={state.values.email} placeholder="ornek@mail.com" aria-invalid={state.errors.email ? true : undefined} aria-describedby={state.errors.email ? 'email-error' : undefined}/>
+      {state.errors.email && <span id="email-error" className="form-error" role="alert">{state.errors.email}</span>}
+    </label>
+    <label>Mesajınız
+      <textarea name="message" required minLength={10} defaultValue={state.values.message} placeholder="Size nasıl yardımcı olabiliriz?" aria-invalid={state.errors.message ? true : undefined} aria-describedby={state.errors.message ? 'message-error' : undefined}/>
+      {state.errors.message && <span id="message-error" className="form-error" role="alert">{state.errors.message}</span>}
+    </label>
+    <button type="submit" disabled={pending}>{pending ? 'Gönderiliyor…' : 'Mesaj gönder'}</button>
+    <small style={{ color: '#777b7e', lineHeight: 1.5 }}>Bu form demo amaçlıdır; doğrulama ve rate limit mimarisi üretim gönderimine hazırdır.</small>
   </form>
 }

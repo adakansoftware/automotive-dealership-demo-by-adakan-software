@@ -1,6 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useState } from 'react'
+import Image from 'next/image'
 import { ChevronLeft, ChevronRight, X } from 'lucide-react'
 import type { VehicleImage } from '@/types/vehicle'
 
@@ -39,7 +40,7 @@ export function VehicleGallery({ images, title }: VehicleGalleryProps) {
 
   return <div className="vehicle-gallery">
     <div className="gallery-main">
-      <img src={current.url} alt={alt} onClick={() => setFullscreen(true)}/>
+      <Image src={current.url} alt={alt} fill sizes="(max-width: 800px) 100vw, 55vw" className="gallery-img" priority={index === 0} onClick={() => setFullscreen(true)}/>
       {multiple && <>
         <button className="gallery-nav prev" aria-label="Önceki görsel" onClick={() => go(-1)}><ChevronLeft size={22}/></button>
         <button className="gallery-nav next" aria-label="Sonraki görsel" onClick={() => go(1)}><ChevronRight size={22}/></button>
@@ -47,7 +48,7 @@ export function VehicleGallery({ images, title }: VehicleGalleryProps) {
       </>}
     </div>
     {multiple && <div className="gallery-thumbs" role="tablist" aria-label="Araç görselleri">
-      {images.map((image, i) => <button key={image.url} className={i === index ? 'active' : ''} role="tab" aria-selected={i === index} aria-label={`Görsel ${i + 1}`} onClick={() => setIndex(i)}><img src={image.url} alt={image.alt ?? `${title} — görsel ${i + 1}`}/></button>)}
+      {images.map((image, i) => <button key={image.url} className={i === index ? 'active' : ''} role="tab" aria-selected={i === index} aria-label={`Görsel ${i + 1}`} onClick={() => setIndex(i)}><Image src={image.url} alt={image.alt ?? `${title} — görsel ${i + 1}`} fill sizes="88px"/></button>)}
     </div>}
     {fullscreen && <div className="gallery-fullscreen" role="dialog" aria-modal="true" aria-label={`${title} — tam ekran galeri`} onClick={() => setFullscreen(false)}>
       <img src={current.url} alt={alt} onClick={(e) => e.stopPropagation()}/>

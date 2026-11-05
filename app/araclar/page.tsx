@@ -58,7 +58,7 @@ export default async function InventoryPage({ searchParams }: { searchParams: Pr
     sort,
   }
 
-  const all = getVehicles()
+  const all = await getVehicles()
   const brands = toOptions([...new Set(all.map((v) => v.brand))])
   // Model seçenekleri markaya bağlıdır; marka seçiliyse yalnız o markanın modelleri.
   const modelSource = active.brand ? all.filter((v) => v.brand === active.brand) : all

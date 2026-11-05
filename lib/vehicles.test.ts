@@ -30,25 +30,25 @@ function makeVehicle(overrides: Partial<Vehicle> = {}): Vehicle {
 }
 
 describe('getVehicles', () => {
-  it('demo envanterinin tamamını döner', () => {
-    expect(getVehicles().length).toBeGreaterThan(0)
+  it('demo envanterinin tamamını döner', async () => {
+    expect((await getVehicles()).length).toBeGreaterThan(0)
   })
 })
 
 describe('getVehicleBySlug', () => {
-  it('geçerli slug araçla eşleşir', () => {
-    const vehicle = getVehicleBySlug('audi-rs6-avant')
+  it('geçerli slug araçla eşleşir', async () => {
+    const vehicle = await getVehicleBySlug('audi-rs6-avant')
     expect(vehicle?.brand).toBe('Audi')
   })
 
-  it('geçersiz slug undefined döner', () => {
-    expect(getVehicleBySlug('yok-boyle-araclar')).toBeUndefined()
+  it('geçersiz slug undefined döner', async () => {
+    expect(await getVehicleBySlug('yok-boyle-araclar')).toBeUndefined()
   })
 })
 
 describe('getFeaturedVehicles', () => {
-  it('yalnızca featured işaretli araçları döner', () => {
-    for (const vehicle of getFeaturedVehicles()) {
+  it('yalnızca featured işaretli araçları döner', async () => {
+    for (const vehicle of await getFeaturedVehicles()) {
       expect(vehicle.featured).toBe(true)
     }
   })
@@ -77,19 +77,25 @@ describe('getRelatedVehicles', () => {
   // BMW 7 Serisi (8.950.000, Sedan) için ±%20 fiyat bandı 7.160.000–10.740.000
   // → RS6 (9.350.000, 2024), Range Rover Sport (9.850.000, 2023), Cayenne
   //   (7.480.000, 2022) puan 2; eşitlikte yıl 2024 > 2023 > 2022.
-  const bmw7 = getVehicleBySlug('bmw-7-serisi-740i')
-  if (!bmw7) throw new Error('demo envanterinde bmw-7-serisi-740i yok')
+  async function getBmw7() {
+    const bmw7 = await getVehicleBySlug('bmw-7-serisi-740i')
+    if (!bmw7) throw new Error('demo envanterinde bmw-7-serisi-740i yok')
+    return bmw7
+  }
 
-  it('kendi slug\'unu dışlar', () => {
-    expect(getRelatedVehicles(bmw7).map((v) => v.slug)).not.toContain('bmw-7-serisi-740i')
+  it('kendi slug\'unu dışlar', async () => {
+    const bmw7 = await getBmw7()
+    expect((await getRelatedVehicles(bmw7)).map((v) => v.slug)).not.toContain('bmw-7-serisi-740i')
   })
 
-  it('limit sayısını geçirmez', () => {
-    expect(getRelatedVehicles(bmw7, 2)).toHaveLength(2)
+  it('limit sayısını geçirmez', async () => {
+    const bmw7 = await getBmw7()
+    expect(await getRelatedVehicles(bmw7, 2)).toHaveLength(2)
   })
 
-  it('fiyat bandı içindeki araçlar öne geçer; eşitlikte daha yeni yıl', () => {
-    const related = getRelatedVehicles(bmw7)
+  it('fiyat bandı içindeki araçlar öne geçer; eşitlikte daha yeni yıl', async () => {
+    const bmw7 = await getBmw7()
+    const related = await getRelatedVehicles(bmw7)
     expect(related.map((v) => v.slug)).toEqual([
       'audi-rs6-avant',
       'range-rover-sport-p400',

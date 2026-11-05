@@ -1,4 +1,11 @@
-import { vehicles } from '@/data/vehicles'
+import { cache } from 'react'
+
+import { vehicles as demoVehicles } from '@/data/vehicles'
+import { getDb, isDbConfigured } from '@/db'
+import {
+  vehicleImages as vehicleImagesTable,
+  vehicles as vehiclesTable,
+} from '@/drizzle/schema'
 import type { Vehicle, VehicleImage } from '@/types/vehicle'
 
 export interface VehicleFilters {
@@ -22,17 +29,64 @@ export type VehicleSortKey =
   | 'mileage-asc'
   | 'year-desc'
 
-/** Tüm araçlar. Sayfalar `data/vehicles` dizisine doğrudan erişmemeli. */
-export function getVehicles(): Vehicle[] {
-  return vehicles
+/**
+ * Tüm araçlar. `DATABASE_URL` tanımlıysa PostgreSQL'den, yoksa demo veriden
+ * okur (build/test ortamı DB gerektirmez). `cache` sayesinde aynı istek
+ * içinde tek sorgu. Sayfalar `data/vehicles` dizisine doğrudan erişmemeli.
+ */
+export const getVehicles = cache(async (): Promise<Vehicle[]> => {
+  if (!isDbConfigured()) return demoVehicles
+
+  const db = getDb()
+  const rows = await db.select().from(vehiclesTable).orderBy(vehiclesTable.id)
+  const imageRows = await db
+    .select()
+    .from(vehicleImagesTable)
+    .orderBy(vehicleImagesTable.sortOrder)
+
+  const imagesByVehicle = new Map<number, typeof imageRows>()
+  for (const image of imageRows) {
+    const list = imagesByVehicle.get(image.vehicleId) ?? []
+    list.push(image)
+    imagesByVehicle.set(image.vehicleId, list)
+  }
+
+  return rows.map((row) => {
+    const images = imagesByVehicle.get(row.id) ?? []
+    // Anahtar görsel: isKey işaretli satır, yoksa ilk sıradaki (getVehicleImages mantığı).
+    const keyImage = images.find((image) => image.isKey) ?? images[0]
+    return {
+      slug: row.slug,
+      brand: row.brand,
+      model: row.model,
+      trim: row.trim,
+      year: row.year,
+      price: Number(row.price),
+      mileage: row.mileage,
+      fuel: row.fuel,
+      transmission: row.transmission,
+      body: row.body,
+      color: row.color,
+      image: keyImage?.url ?? '',
+      images: images.length
+        ? images.map((image) => ({ url: image.url, alt: image.alt || undefined }))
+        : undefined,
+      featured: row.featured,
+      status: row.status,
+      condition: row.condition,
+      description: row.description,
+    } satisfies Vehicle
+  })
+})
+
+export async function getVehicleBySlug(slug: string): Promise<Vehicle | undefined> {
+  const all = await getVehicles()
+  return all.find((vehicle) => vehicle.slug === slug)
 }
 
-export function getVehicleBySlug(slug: string): Vehicle | undefined {
-  return vehicles.find((vehicle) => vehicle.slug === slug)
-}
-
-export function getFeaturedVehicles(): Vehicle[] {
-  return vehicles.filter((vehicle) => vehicle.featured)
+export async function getFeaturedVehicles(): Promise<Vehicle[]> {
+  const all = await getVehicles()
+  return all.filter((vehicle) => vehicle.featured)
 }
 
 /** Aracın tam görsel listesi; çoklu görsel yoksa tek anahtar görsel. */
@@ -46,8 +100,9 @@ export function getVehicleImages(vehicle: Vehicle): VehicleImage[] {
  *   aynı marka +3, aynı kasa +2, fiyat ±%20 bandı içinde +2.
  * Eşitlikte daha yeni yıl öne geçer.
  */
-export function getRelatedVehicles(vehicle: Vehicle, limit = 3): Vehicle[] {
-  return vehicles
+export async function getRelatedVehicles(vehicle: Vehicle, limit = 3): Promise<Vehicle[]> {
+  const all = await getVehicles()
+  return all
     .filter((candidate) => candidate.slug !== vehicle.slug)
     .map((candidate) => {
       let score = 0

@@ -1,7 +1,7 @@
 # Gelecek Sistem Tasarımı — Atelier Motors
 
-Sürüm: 1.0 (FAZ 6 — yalnızca tasarım dokümanı)
-Durum: **Onay bekliyor.** Bu dokümandaki hiçbir şey uygulanmadı; kod tabanına dokunulmadı.
+Sürüm: 1.1 (FAZ 6 — uygulandı)
+Durum: **Uygulandı.** Şema, veri erişim katmanı, Auth.js v5, admin panel, rate limit ve audit log kod tabanında canlı. Gerçek DB/SMTP/müşteri verisi dağıtım ön koşulu olarak bekliyor (§7).
 
 Bu doküman, mevcut demo (dosya tabanlı veri) sistemden üretim sistemine geçişin
 teknik tasarımını tanımlar: PostgreSQL şeması, admin panel mimarisi, kimlik

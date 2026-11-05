@@ -5,7 +5,7 @@ import { InquiryBar } from '@/components/vehicles/inquiry-bar'
 import { VehicleGallery } from '@/components/vehicles/vehicle-gallery'
 import { getVehicles, getVehicleBySlug, getVehicleImages, getRelatedVehicles } from '@/lib/vehicles'
 import { formatPrice, formatMileage } from '@/lib/format'
-import { siteConfig } from '@/data/site-config'
+import { getSiteConfig } from '@/lib/site-config'
 import type { VehicleStatus } from '@/types/vehicle'
 
 const AVAILABILITY: Record<VehicleStatus, string> = {
@@ -14,11 +14,14 @@ const AVAILABILITY: Record<VehicleStatus, string> = {
   'Satıldı': 'https://schema.org/SoldOut',
 }
 
-export function generateStaticParams() { return getVehicles().map((v) => ({ slug: v.slug })) }
+export async function generateStaticParams() {
+  const vehicles = await getVehicles()
+  return vehicles.map((v) => ({ slug: v.slug }))
+}
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params
-  const vehicle = getVehicleBySlug(slug)
+  const vehicle = await getVehicleBySlug(slug)
   if (!vehicle) return { title: 'Araç bulunamadı' }
   const title = `${vehicle.brand} ${vehicle.model} ${vehicle.trim}`
   return {
@@ -42,10 +45,11 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function VehicleDetail({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params
-  const vehicle = getVehicleBySlug(slug)
+  const vehicle = await getVehicleBySlug(slug)
   if (!vehicle) notFound()
-  const related = getRelatedVehicles(vehicle)
+  const related = await getRelatedVehicles(vehicle)
   const images = getVehicleImages(vehicle)
+  const siteConfig = await getSiteConfig()
   const galleryTitle = `${vehicle.brand} ${vehicle.model} ${vehicle.trim}`
   const specs = ([['Yıl', vehicle.year], ['Kilometre', formatMileage(vehicle.mileage)], ['Yakıt', vehicle.fuel], ['Vites', vehicle.transmission], ['Kasa', vehicle.body], ['Renk', vehicle.color], ...(vehicle.condition ? [['Durumu', vehicle.condition] as const] : []), ['Fiyat', formatPrice(vehicle.price)]] as const).filter(([, value]) => value !== undefined && value !== '')
   const absoluteImage = (url: string) => url.startsWith('http') ? url : `${siteConfig.url}${url}`

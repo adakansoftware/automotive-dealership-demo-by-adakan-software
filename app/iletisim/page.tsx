@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { ContactForm } from '@/components/contact/contact-form'
-import { siteConfig } from '@/data/site-config'
+import { getSiteConfig } from '@/lib/site-config'
 
 export const metadata: Metadata = {
   title: 'İletişim',
@@ -12,7 +12,8 @@ export const metadata: Metadata = {
   },
 }
 
-export default function Contact() {
+export default async function Contact() {
+  const siteConfig = await getSiteConfig()
   return <main>
     <section className="page-hero"><span className="eyebrow">İletişim</span><h1 className="page-title">Sizi showroom’umuza<br/>bekliyoruz.</h1><p>Bir otomobil hakkında bilgi almak veya sizi tanımak için bize ulaşın.</p></section>
     <section className="section"><div className="contact-grid">

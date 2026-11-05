@@ -3,23 +3,27 @@ import Link from 'next/link'
 import { ArrowUpRight } from 'lucide-react'
 import { VehicleCard } from '@/components/vehicles/vehicle-card'
 import { getFeaturedVehicles } from '@/lib/vehicles'
-import { siteConfig } from '@/data/site-config'
+import { getSiteConfig } from '@/lib/site-config'
 
 const OG_IMAGE = 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?auto=format&fit=crop&w=2400&q=90'
 
-export const metadata: Metadata = {
-  alternates: { canonical: '/' },
-  openGraph: {
-    title: 'Atelier Motors — Seçkin Otomobiller',
-    description: 'Özenle seçilmiş otomobiller ve kişisel bir showroom deneyimi.',
-    url: siteConfig.url,
-    images: [{ url: OG_IMAGE }],
-  },
-  twitter: { images: [OG_IMAGE] },
+export async function generateMetadata(): Promise<Metadata> {
+  const siteConfig = await getSiteConfig()
+  return {
+    alternates: { canonical: '/' },
+    openGraph: {
+      title: `${siteConfig.brand.name} — Seçkin Otomobiller`,
+      description: 'Özenle seçilmiş otomobiller ve kişisel bir showroom deneyimi.',
+      url: siteConfig.url,
+      images: [{ url: OG_IMAGE }],
+    },
+    twitter: { images: [OG_IMAGE] },
+  }
 }
 
-export default function Home() {
-  const featuredVehicles = getFeaturedVehicles()
+export default async function Home() {
+  const siteConfig = await getSiteConfig()
+  const featuredVehicles = await getFeaturedVehicles()
   const dealerJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'AutoDealer',

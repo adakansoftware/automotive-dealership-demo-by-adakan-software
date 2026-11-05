@@ -1,28 +1,16 @@
 'use server'
 
 import { headers } from 'next/headers'
+
+import { getDb, isDbConfigured } from '@/db'
+import { inquiries as inquiriesTable } from '@/drizzle/schema'
+import { checkRateLimit, hashIdentifier } from '@/lib/rate-limit'
 import type { InquiryFormState } from './inquiry-state'
 import { validateInquiry } from './validation'
 
-/**
- * Demo rate limiter — süreç belleğinde, örnek başına.
- * Üretimde kalıcı depolamalı (Redis/DB) ve IP + oturum bazlı olmalı.
- */
+/** Pencere: 10 dakika / 5 istek — DB varsa kalıcı, yoksa süreç belleği. */
 const WINDOW_MS = 10 * 60 * 1000
 const MAX_PER_WINDOW = 5
-const rateLimiter = new Map<string, { count: number; resetAt: number }>()
-
-function isWithinRateLimit(key: string): boolean {
-  const now = Date.now()
-  const entry = rateLimiter.get(key)
-  if (!entry || entry.resetAt < now) {
-    rateLimiter.set(key, { count: 1, resetAt: now + WINDOW_MS })
-    return true
-  }
-  if (entry.count >= MAX_PER_WINDOW) return false
-  entry.count++
-  return true
-}
 
 const EMPTY_VALUES = { name: '', phone: '', email: '', message: '' }
 
@@ -41,11 +29,28 @@ export async function submitInquiry(_prev: InquiryFormState, formData: FormData)
 
   const requestHeaders = await headers()
   const ip = (requestHeaders.get('x-forwarded-for') ?? 'local').split(',')[0].trim()
-  if (!isWithinRateLimit(ip)) {
+  const withinLimit = await checkRateLimit(`inquiry:${ip}`, {
+    windowMs: WINDOW_MS,
+    max: MAX_PER_WINDOW,
+  })
+  if (!withinLimit) {
     return { status: 'rate-limited', errors: {}, values: EMPTY_VALUES }
   }
 
-  // DEMO MODU: gerçek gönderim yok. Onay sonrası gönderim sağlayıcısı (SMTP/e-posta API)
-  // ortam değişkenleriyle bağlanır; kimlik bilgisi koda gömülmez.
+  // DB yapılandırılmışsa sorgu kalıcı olarak kaydedilir (admin panelde görünür).
+  // E-posta gönderimi ayrı karardır: SMTP sağlayıcısı onay sonrası bağlanır.
+  if (isDbConfigured()) {
+    const db = getDb()
+    await db.insert(inquiriesTable).values({
+      name: values.name,
+      phone: values.phone,
+      email: values.email,
+      message: values.message,
+      source: 'form',
+      status: 'new',
+      ipHash: hashIdentifier(ip),
+    })
+  }
+
   return { status: 'success', errors: {}, values: EMPTY_VALUES }
 }

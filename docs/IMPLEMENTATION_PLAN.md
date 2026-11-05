@@ -121,15 +121,16 @@ Bulgu kodları `docs/ARCHITECTURE_AUDIT.md` ile eşleşir.
   - İletişim formu: server action (`app/iletisim/actions.ts`) + `useActionState`; istemci (native required/pattern) + sunucu doğrulama; hata erişilebilirliği (`aria-invalid`, `aria-describedby`, `role="alert"`); rate limit mimarisi (in-memory demo, 10 dk/5 istek — üretim Redis/DB dokümante); demo/gerçek gönderim açıkça ayrıştırılmış; sır yok. Not: `'use server'` dosyasından sabit export edilemez — başlangıç durumu `inquiry-state.ts`'de (C2).
   - Responsive denetim: kod seviyesi 375–1920 + manuel kontrol listesi `docs/RESPONSIVE_AUDIT.md`'de; KVKK yer tutucu planı aynı dosyada (hukuki uyum iddiası yok).
   - Doğrulama: `tsc --noEmit` + `next build` temiz; smoke — srcset/`/_next/image` 200, `aria-expanded`, server action form POST.
-- FAZ 6 (Gelecek Sistem Tasarımı): ✅ doküman tamamlandı — `docs/FUTURE_SYSTEM_DESIGN.md`.
-  - PostgreSQL şeması: `vehicles`, `vehicle_images`, `vehicle_specs`, `inquiries`, `admin_users`, `site_config`, `audit_log`, `rate_limits` (enum'lar mevcut `types/vehicle.ts` ile birebir; fiyat BIGINT TRY; silme yerine durum geçişi; `ip_hash` KVKK veri minimizasyonu).
-  - Migration: Drizzle ORM önerisi (Prisma alternatifi değerlendirildi); `drizzle-kit generate/migrate` akışı; seed kaynağı mevcut `data/` dosyaları.
-  - Veri erişim geçişi: `lib/vehicles.ts` imzaları korunur, içerik DB sorgusuna döner; filtre/sıralama SQL'e taşınır.
-  - Admin panel: `/admin` rota grubu, server components + server actions, `owner`/`editor` rolleri; SPA yok.
-  - Auth karşılaştırması: Auth.js v5 credentials + argon2id önerildi (kendi oturum yönetimi ve Clerk/Auth0 değerlendirilip elendi).
-  - Rate limit üretim tasarımı: PostgreSQL tabanlı sayaç (Redis yalnız büyüme halinde), hash'lenmiş anahtar; admin girişine ayrı sıkı limit.
-  - `.env.example` planı, dağıtım ön koşulları (alan adı, DB, SMTP, gerçek site-config), 8 adımlık uygulama sırası.
-  - Kod değişikliği yok — uygulama ayrı onay gerektirir.
+- FAZ 6 (Gelecek Sistem Tasarımı): ✅ tamamlandı — doküman (`docs/FUTURE_SYSTEM_DESIGN.md`) + uygulama.
+  - Tasarım: PostgreSQL şeması (`vehicles`, `vehicle_images`, `vehicle_specs`, `inquiries`, `admin_users`, `site_config`, `audit_log`, `rate_limits`; enum'lar `types/vehicle.ts` ile birebir), Drizzle ORM, Auth.js v5 credentials + argon2id, PostgreSQL tabanlı rate limit, 8 adımlık uygulama sırası.
+  - Veri katmanı: Drizzle şema + seed (860a97d); `lib/vehicles.ts` DB modlu — `DATABASE_URL` varsa PostgreSQL, yoksa demo veri (build/test DB gerektirmez); getter'lar async, `filterVehicles`/`sortVehicles` saf kaldı (test sabitli). `lib/site-config.ts` aynı desenle çalışır.
+  - Auth: next-auth 5.0.0-beta.32, credentials provider (`admin_users` + argon2id), JWT oturum; `/admin/login` + 15 dk/5 deneme sıkı rate limit.
+  - Admin panel: `app/(admin)/admin/` — genel bakım sayaçları, araç CRUD (durum, oluşturma/düzenleme/silme; görsel+künye "url | açıklama" satırları), sorgu yönetimi, site ayarları (owner, JSON), denetim izi (owner). Server actions + `useActionState`.
+  - Güvenlik: sayfa düzeyi koruma `requireAdminSession`/`requireOwnerSession` (`lib/admin-auth.ts`) — layout redirect'i paralel stream sızıntısını tek başına engellemez; `robots.ts` `/admin` disallow + sayfa bazlı `noindex`; `next/image` gibi dışa açık yüzey değişmedi.
+  - Rate limit + audit: `lib/rate-limit.ts` (DB'de atomik upsert, tuzlanmış SHA-256 anahtar; yoksa süreç belleği); iletişim formu DB varken `inquiries`'a yazar; `lib/audit.ts` tüm mutating aksiyonlarda diff ile yazar.
+  - `.env.example` güncel; `db:generate`/`db:migrate`/`db:seed` script'leri.
+  - Doğrulama: `tsc --noEmit` temiz, 35/35 test, `next build` temiz (admin rotaları dinamik); üretim smoke — robots disallow, login 200, guard sızıntısı yok, tüm vitrin rotaları 200.
+  - Bekleyen (dağıtım ön koşulu): gerçek DB sağlayıcı kararı, SMTP gönderimi, gerçek müşteri bilgisi/alan adı.
 - Test Stratejisi: ✅ tamamlandı.
   - Vitest 5.1.0 (devDependency); `vitest.config.ts` — node ortamı, `@` alias'ı, kapsam `lib/**` + `app/**`.
   - `package.json` script'leri: `typecheck` (`tsc --noEmit`), `test` (`vitest run`), `test:watch`.

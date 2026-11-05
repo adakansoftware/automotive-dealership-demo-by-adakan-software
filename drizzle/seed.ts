@@ -1,4 +1,4 @@
-import { db } from '../db'
+import { getDb } from '../db'
 import { adminUsers, siteConfigTable, vehicleImages, vehicles } from './schema'
 import { vehicles as demoVehicles } from '../data/vehicles'
 import { siteConfig } from '../data/site-config'
@@ -9,6 +9,8 @@ import { siteConfig } from '../data/site-config'
  */
 async function seed() {
   console.log('Tohum başlıyor…')
+
+  const db = getDb()
 
   await db.transaction(async (tx) => {
     // Demo araçlar

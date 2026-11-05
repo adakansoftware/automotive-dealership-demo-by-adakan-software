@@ -1,11 +1,18 @@
+import { config } from 'dotenv'
+import { eq } from 'drizzle-orm'
 import { getDb } from '../db'
 import { adminUsers, siteConfigTable, vehicleImages, vehicles } from './schema'
 import { vehicles as demoVehicles } from '../data/vehicles'
 import { siteConfig } from '../data/site-config'
 
+// .env.local öncelikli (README akışı), yoksa .env
+config({ path: '.env.local' })
+config()
+
 /**
  * Tohum betiği — demo envanterini ve site yapılandırmasını veritabanına yükler.
  * Tek seferlik çalıştırılır: `corepack pnpm db:seed`
+ * Tekrar çalıştırmada günceller (upsert) — idempotent.
  */
 async function seed() {
   console.log('Tohum başlıyor…')
@@ -34,9 +41,31 @@ async function seed() {
           featured: vehicle.featured ?? false,
           description: vehicle.description,
         })
+        .onConflictDoUpdate({
+          target: vehicles.slug,
+          set: {
+            brand: vehicle.brand,
+            model: vehicle.model,
+            trim: vehicle.trim,
+            year: vehicle.year,
+            price: vehicle.price,
+            mileage: vehicle.mileage,
+            fuel: vehicle.fuel,
+            transmission: vehicle.transmission,
+            body: vehicle.body,
+            color: vehicle.color,
+            status: vehicle.status ?? 'Satışta',
+            condition: vehicle.condition ?? 'İkinci El',
+            featured: vehicle.featured ?? false,
+            description: vehicle.description,
+          },
+        })
         .returning({ id: vehicles.id })
 
       const vehicleId = inserted[0]!.id
+
+      // Araç görselleri eski kayıttan kalmış olabilir — temizle, yeniden ekle.
+      await tx.delete(vehicleImages).where(eq(vehicleImages.vehicleId, vehicleId))
 
       const images = vehicle.images ?? [{ url: vehicle.image, alt: '' }]
       await tx.insert(vehicleImages).values(

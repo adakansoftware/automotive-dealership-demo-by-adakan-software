@@ -1,5 +1,9 @@
-import 'dotenv/config'
+import { config } from 'dotenv'
 import { defineConfig } from 'drizzle-kit'
+
+// .env.local öncelikli (README akışı), yoksa .env
+config({ path: '.env.local' })
+config()
 
 export default defineConfig({
   dialect: 'postgresql',

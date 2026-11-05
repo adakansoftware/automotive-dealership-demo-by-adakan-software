@@ -1,7 +1,8 @@
 'use server'
 
 import { headers } from 'next/headers'
-import type { InquiryFormState, InquiryFormValues } from './inquiry-state'
+import type { InquiryFormState } from './inquiry-state'
+import { validateInquiry } from './validation'
 
 /**
  * Demo rate limiter — süreç belleğinde, örnek başına.
@@ -23,27 +24,17 @@ function isWithinRateLimit(key: string): boolean {
   return true
 }
 
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-const PHONE_PATTERN = /^[\d\s()+-]{10,20}$/
-
-function validate(values: InquiryFormValues): InquiryFormState['errors'] {
-  const errors: InquiryFormState['errors'] = {}
-  if (values.name.length < 2) errors.name = 'Lütfen adınızı ve soyadınızı girin.'
-  if (!PHONE_PATTERN.test(values.phone)) errors.phone = 'Lütfen geçerli bir telefon numarası girin (örn. +90 5xx xxx xx xx).'
-  if (!EMAIL_PATTERN.test(values.email)) errors.email = 'Lütfen geçerli bir e-posta adresi girin.'
-  if (values.message.length < 10) errors.message = 'Lütfen en az 10 karakterlik bir mesaj yazın.'
-  return errors
-}
+const EMPTY_VALUES = { name: '', phone: '', email: '', message: '' }
 
 export async function submitInquiry(_prev: InquiryFormState, formData: FormData): Promise<InquiryFormState> {
-  const values: InquiryFormValues = {
+  const values = {
     name: String(formData.get('name') ?? '').trim(),
     phone: String(formData.get('phone') ?? '').trim(),
     email: String(formData.get('email') ?? '').trim(),
     message: String(formData.get('message') ?? '').trim(),
   }
 
-  const errors = validate(values)
+  const errors = validateInquiry(values)
   if (Object.keys(errors).length > 0) {
     return { status: 'error', errors, values }
   }
@@ -51,10 +42,10 @@ export async function submitInquiry(_prev: InquiryFormState, formData: FormData)
   const requestHeaders = await headers()
   const ip = (requestHeaders.get('x-forwarded-for') ?? 'local').split(',')[0].trim()
   if (!isWithinRateLimit(ip)) {
-    return { status: 'rate-limited', errors: {}, values: { name: '', phone: '', email: '', message: '' } }
+    return { status: 'rate-limited', errors: {}, values: EMPTY_VALUES }
   }
 
   // DEMO MODU: gerçek gönderim yok. Onay sonrası gönderim sağlayıcısı (SMTP/e-posta API)
   // ortam değişkenleriyle bağlanır; kimlik bilgisi koda gömülmez.
-  return { status: 'success', errors: {}, values: { name: '', phone: '', email: '', message: '' } }
+  return { status: 'success', errors: {}, values: EMPTY_VALUES }
 }

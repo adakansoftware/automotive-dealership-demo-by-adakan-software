@@ -121,4 +121,18 @@ Bulgu kodları `docs/ARCHITECTURE_AUDIT.md` ile eşleşir.
   - İletişim formu: server action (`app/iletisim/actions.ts`) + `useActionState`; istemci (native required/pattern) + sunucu doğrulama; hata erişilebilirliği (`aria-invalid`, `aria-describedby`, `role="alert"`); rate limit mimarisi (in-memory demo, 10 dk/5 istek — üretim Redis/DB dokümante); demo/gerçek gönderim açıkça ayrıştırılmış; sır yok. Not: `'use server'` dosyasından sabit export edilemez — başlangıç durumu `inquiry-state.ts`'de (C2).
   - Responsive denetim: kod seviyesi 375–1920 + manuel kontrol listesi `docs/RESPONSIVE_AUDIT.md`'de; KVKK yer tutucu planı aynı dosyada (hukuki uyum iddiası yok).
   - Doğrulama: `tsc --noEmit` + `next build` temiz; smoke — srcset/`/_next/image` 200, `aria-expanded`, server action form POST.
-- FAZ 6+: bekliyor — onay sonrası uygulanır (yalnızca doküman).
+- FAZ 6 (Gelecek Sistem Tasarımı): ✅ doküman tamamlandı — `docs/FUTURE_SYSTEM_DESIGN.md`.
+  - PostgreSQL şeması: `vehicles`, `vehicle_images`, `vehicle_specs`, `inquiries`, `admin_users`, `site_config`, `audit_log`, `rate_limits` (enum'lar mevcut `types/vehicle.ts` ile birebir; fiyat BIGINT TRY; silme yerine durum geçişi; `ip_hash` KVKK veri minimizasyonu).
+  - Migration: Drizzle ORM önerisi (Prisma alternatifi değerlendirildi); `drizzle-kit generate/migrate` akışı; seed kaynağı mevcut `data/` dosyaları.
+  - Veri erişim geçişi: `lib/vehicles.ts` imzaları korunur, içerik DB sorgusuna döner; filtre/sıralama SQL'e taşınır.
+  - Admin panel: `/admin` rota grubu, server components + server actions, `owner`/`editor` rolleri; SPA yok.
+  - Auth karşılaştırması: Auth.js v5 credentials + argon2id önerildi (kendi oturum yönetimi ve Clerk/Auth0 değerlendirilip elendi).
+  - Rate limit üretim tasarımı: PostgreSQL tabanlı sayaç (Redis yalnız büyüme halinde), hash'lenmiş anahtar; admin girişine ayrı sıkı limit.
+  - `.env.example` planı, dağıtım ön koşulları (alan adı, DB, SMTP, gerçek site-config), 8 adımlık uygulama sırası.
+  - Kod değişikliği yok — uygulama ayrı onay gerektirir.
+- Test Stratejisi: ✅ tamamlandı.
+  - Vitest 5.1.0 (devDependency); `vitest.config.ts` — node ortamı, `@` alias'ı, kapsam `lib/**` + `app/**`.
+  - `package.json` script'leri: `typecheck` (`tsc --noEmit`), `test` (`vitest run`), `test:watch`.
+  - Testler (35): `lib/vehicles.test.ts` (filterVehicles kombinasyonları/sınır değerleri, sortVehicles tüm anahtarlar + girdi mutasyonu yok, getRelatedVehicles puanlama gerçek envanterde, getVehicleBySlug/getFeaturedVehicles/getVehicleImages düşüş davranışı), `lib/format.test.ts` (TRY biçimi, binlik ayraç, km), `app/iletisim/validation.test.ts` (form doğrulama: kısa ad, telefon/e-posta desenleri, çoklu hata).
+  - Refactor: iletişim formu doğrulaması `app/iletisim/validation.ts`'e çıkarıldı (saf fonksiyon, test edilebilir); `actions.ts` import eder — davranış değişmedi.
+  - Doğrulama: `pnpm test` 35/35 geçer; `tsc --noEmit` temiz; `next build` temiz.

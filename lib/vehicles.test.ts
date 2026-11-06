@@ -74,9 +74,10 @@ describe('getVehicleImages', () => {
 
 describe('getRelatedVehicles', () => {
   // Puanlama gerçek demo envanteri üzerinde doğrulanır:
-  // BMW 7 Serisi (8.950.000, Sedan) için ±%20 fiyat bandı 7.160.000–10.740.000
-  // → RS6 (9.350.000, 2024), Range Rover Sport (9.850.000, 2023), Cayenne
-  //   (7.480.000, 2022) puan 2; eşitlikte yıl 2024 > 2023 > 2022.
+  // BMW 7 Serisi (9.450.000, Sedan) için i4 M50 marka eşleşmesiyle +3 alır
+  // (fiyat bandı dışında olsa da). Puan 2'li adayler: Tesla Model 3 (Sedan,
+  // 2025), RS6 (band içi, 2024), C 200 (Sedan, 2024), Range Rover Sport ve
+  // Cayenne (band içi); eşitlikte yıl 2025 > 2024, aynı yılda liste sırası.
   async function getBmw7() {
     const bmw7 = await getVehicleBySlug('bmw-7-serisi-740i')
     if (!bmw7) throw new Error('demo envanterinde bmw-7-serisi-740i yok')
@@ -93,13 +94,13 @@ describe('getRelatedVehicles', () => {
     expect(await getRelatedVehicles(bmw7, 2)).toHaveLength(2)
   })
 
-  it('fiyat bandı içindeki araçlar öne geçer; eşitlikte daha yeni yıl', async () => {
+  it('marka eşleşmesi öne geçer; kalanlar fiyat bandı + yeni yıl sırasıyla', async () => {
     const bmw7 = await getBmw7()
     const related = await getRelatedVehicles(bmw7)
     expect(related.map((v) => v.slug)).toEqual([
+      'bmw-i4-m50',
+      'tesla-model-3-long-range',
       'audi-rs6-avant',
-      'range-rover-sport-p400',
-      'porsche-cayenne-s',
     ])
   })
 })

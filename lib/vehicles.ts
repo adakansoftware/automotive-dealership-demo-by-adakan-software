@@ -4,9 +4,10 @@ import { vehicles as demoVehicles } from '@/data/vehicles'
 import { getDb, isDbConfigured } from '@/db'
 import {
   vehicleImages as vehicleImagesTable,
+  vehicleSpecs as vehicleSpecsTable,
   vehicles as vehiclesTable,
 } from '@/drizzle/schema'
-import type { Vehicle, VehicleImage } from '@/types/vehicle'
+import type { Vehicle, VehicleImage, VehicleSpec } from '@/types/vehicle'
 
 export interface VehicleFilters {
   brand?: string
@@ -51,8 +52,17 @@ export const getVehicles = cache(async (): Promise<Vehicle[]> => {
     imagesByVehicle.set(image.vehicleId, list)
   }
 
+  const specRows = await db.select().from(vehicleSpecsTable).orderBy(vehicleSpecsTable.sortOrder)
+  const specsByVehicle = new Map<number, VehicleSpec[]>()
+  for (const spec of specRows) {
+    const list = specsByVehicle.get(spec.vehicleId) ?? []
+    list.push({ label: spec.label, value: spec.value })
+    specsByVehicle.set(spec.vehicleId, list)
+  }
+
   return rows.map((row) => {
     const images = imagesByVehicle.get(row.id) ?? []
+    const specs = specsByVehicle.get(row.id) ?? []
     // Anahtar görsel: isKey işaretli satır, yoksa ilk sıradaki (getVehicleImages mantığı).
     const keyImage = images.find((image) => image.isKey) ?? images[0]
     return {
@@ -71,6 +81,7 @@ export const getVehicles = cache(async (): Promise<Vehicle[]> => {
       images: images.length
         ? images.map((image) => ({ url: image.url, alt: image.alt || undefined }))
         : undefined,
+      specs: specs.length ? specs : undefined,
       featured: row.featured,
       status: row.status,
       condition: row.condition,

@@ -51,7 +51,8 @@ export default async function VehicleDetail({ params }: { params: Promise<{ slug
   const images = getVehicleImages(vehicle)
   const siteConfig = await getSiteConfig()
   const galleryTitle = `${vehicle.brand} ${vehicle.model} ${vehicle.trim}`
-  const specs = ([['Yıl', vehicle.year], ['Kilometre', formatMileage(vehicle.mileage)], ['Yakıt', vehicle.fuel], ['Vites', vehicle.transmission], ['Kasa', vehicle.body], ['Renk', vehicle.color], ...(vehicle.condition ? [['Durumu', vehicle.condition] as const] : []), ['Fiyat', formatPrice(vehicle.price)]] as const).filter(([, value]) => value !== undefined && value !== '')
+  const baseSpecs = ([['Yıl', vehicle.year], ['Kilometre', formatMileage(vehicle.mileage)], ['Yakıt', vehicle.fuel], ['Vites', vehicle.transmission], ['Kasa', vehicle.body], ['Renk', vehicle.color], ...(vehicle.condition ? [['Durumu', vehicle.condition] as const] : []), ['Fiyat', formatPrice(vehicle.price)]] as const).filter(([, value]) => value !== undefined && value !== '')
+  const specs = [...baseSpecs, ...(vehicle.specs ?? []).map((spec) => [spec.label, spec.value] as [string, string])]
   const absoluteImage = (url: string) => url.startsWith('http') ? url : `${siteConfig.url}${url}`
   const vehicleJsonLd = {
     '@context': 'https://schema.org',

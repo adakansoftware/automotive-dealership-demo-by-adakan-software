@@ -24,6 +24,11 @@ export interface VehicleImage {
   alt?: string
 }
 
+export interface VehicleSpec {
+  label: string
+  value: string
+}
+
 export interface Vehicle {
   slug: string
   brand: string
@@ -38,6 +43,7 @@ export interface Vehicle {
   color: string
   image: string
   images?: VehicleImage[]
+  specs?: VehicleSpec[]
   featured?: boolean
   status?: VehicleStatus
   condition?: VehicleCondition

@@ -1,7 +1,7 @@
 import { config } from 'dotenv'
 import { eq } from 'drizzle-orm'
 import { getDb } from '../db'
-import { adminUsers, siteConfigTable, vehicleImages, vehicles } from './schema'
+import { adminUsers, siteConfigTable, vehicleImages, vehicleSpecs, vehicles } from './schema'
 import { vehicles as demoVehicles } from '../data/vehicles'
 import { siteConfig } from '../data/site-config'
 
@@ -77,6 +77,19 @@ async function seed() {
           isKey: index === 0,
         })),
       )
+
+      // Künye satırları da görseller gibi temizlenip yeniden yazılır.
+      await tx.delete(vehicleSpecs).where(eq(vehicleSpecs.vehicleId, vehicleId))
+      if (vehicle.specs?.length) {
+        await tx.insert(vehicleSpecs).values(
+          vehicle.specs.map((spec, index) => ({
+            vehicleId,
+            label: spec.label,
+            value: spec.value,
+            sortOrder: index,
+          })),
+        )
+      }
     }
 
     // Site yapılandırması

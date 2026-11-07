@@ -107,6 +107,21 @@ export function getVehicleImages(vehicle: Vehicle): VehicleImage[] {
 }
 
 /**
+ * Meta/OG özeti: ilk paragraf; 160 karakteri aşarsa cümle sınırında kısaltır.
+ * Detay sayfası gövdesi tüm paragrafları basar; arama motoru ve sosyal
+ * paylaşım kartları bu özeti kullanır.
+ */
+export function getVehicleSummary(vehicle: Pick<Vehicle, 'description'>): string {
+  const first = vehicle.description.split(/\n{2,}/)[0]?.trim() ?? ''
+  if (first.length <= 160) return first
+  const cut = first.slice(0, 160)
+  const sentenceEnd = Math.max(cut.lastIndexOf('. '), cut.lastIndexOf('? '), cut.lastIndexOf('! '))
+  if (sentenceEnd > 0) return cut.slice(0, sentenceEnd + 1)
+  const wordEnd = cut.lastIndexOf(' ')
+  return wordEnd > 0 ? cut.slice(0, wordEnd) : cut
+}
+
+/**
  * Benzer araçlar — açıklanabilir puanlama:
  *   aynı marka +3, aynı kasa +2, fiyat ±%20 bandı içinde +2.
  * Eşitlikte daha yeni yıl öne geçer.

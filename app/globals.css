@@ -46,6 +46,8 @@ a { color:inherit; text-decoration:none; }
 .gallery-fullscreen .gallery-counter { position:absolute; right:auto; left:22px; bottom:22px; background:transparent; }
 .status-badge { display:inline-block; font-size:10px; letter-spacing:.15em; text-transform:uppercase; padding:7px 12px; border:1px solid var(--champagne); color:var(--champagne); margin-bottom:20px; }
 .status-badge.reserved { border-color:var(--stone); color:var(--stone); }
+.vehicle-image .status-badge { position:absolute; top:12px; left:12px; margin:0; z-index:2; }
+.detail-info p + p { margin-top:14px; }
 .spec-table { display:grid; grid-template-columns:repeat(4,1fr); border-top:1px solid var(--line); }
 .spec-table div { border-bottom:1px solid var(--line); padding:22px 20px 22px 0; }
 .spec-table span { display:block; color:var(--muted); font-size:10px; text-transform:uppercase; letter-spacing:.1em; margin-bottom:8px; }

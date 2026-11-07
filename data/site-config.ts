@@ -15,6 +15,8 @@ export const siteConfig = {
     address: 'İstanbul, Türkiye',
     location: 'İstanbul · Türkiye',
     hours: 'Pazartesi — Cumartesi · 09:00 — 19:00',
+    // schema.org openingHours biçimi (Mo-Sa 09:00-19:00) — AutoDealer JSON-LD'de kullanılır.
+    openingHoursSchema: 'Mo-Sa 09:00-19:00',
   },
   company: {
     name: 'Adakan Software',

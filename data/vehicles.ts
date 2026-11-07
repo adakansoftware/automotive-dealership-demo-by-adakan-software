@@ -35,7 +35,7 @@ export const vehicles: Vehicle[] = [
     featured: true,
     status: 'Satışta',
     condition: 'İkinci El',
-    description: 'Zamansız bir tasarım, rafine sürüş ve ileri teknoloji. 7 Serisi, yolculuğu bir sanata dönüştürür.',
+    description: 'Zamansız bir tasarım, rafine sürüş karakteri ve ileri teknoloji bir arada: 7 Serisi, her yolculuğu sakin ve zarif bir deneyime dönüştürür.\n\nKaputun altında 380 HP ve 540 Nm üreten 3.0L TwinPower Turbo altı silindir, 8 ileri Steptronic şanzımanla ve xDrive çekiş sistemiyle uyum içinde çalışıyor. 5.4 saniyelik 0–100 km/s hızlanması arkaya yaslanan yolculuklarda kendini gösterir; şehir içindeyse sessiz ve ahenkli kalır.\n\nMineral Beyaz gövdesi ve özenle korunmuş 12.400 kilometresiyle showroomumuzda görülmeyi bekliyor. Detaylı incelemesi ve test sürüşü için bize ulaşabilirsiniz.',
   },
   {
     slug: 'mercedes-amg-gt-53',
@@ -67,7 +67,7 @@ export const vehicles: Vehicle[] = [
     featured: true,
     status: 'Satışta',
     condition: 'İkinci El',
-    description: 'Performansın zarafetle buluştuğu, etkileyici bir grand tourer. AMG GT 53, her metrede hissedilen bir karakter sunar.',
+    description: 'Performansın zarafetle buluştuğu etkileyici bir grand tourer: AMG GT 53, her metresinde hissedilen belirgin bir karakter sunar.\n\n3.0L AMG altı silindir motor, EQ Boost hibrit desteğiyle 435 HP ve 520 Nm üretiyor; 100 km/s hıza 4.5 saniyede ulaşıyor. AMG SPEEDSHIFT 9G-Tronic şanzıman ve 4MATIC+ çekiş sistemi, bu gücü her koşulda kontrollü biçimde yola aktarıyor.\n\nObsidyen Siyah gövdesi ve 8.900 kilometresiyle dikkatle korunmuş bu örnek, uzun yol tutkusuna hitap ediyor. Showroomumuzda sizi bekliyor.',
   },
   {
     slug: 'porsche-cayenne-s',
@@ -98,7 +98,7 @@ export const vehicles: Vehicle[] = [
     ],
     status: 'Satışta',
     condition: 'İkinci El',
-    description: 'Günlük yaşamın konforu ile Porsche karakterinin kusursuz dengesi. Cayenne S, her yolun hakkını verir.',
+    description: 'Günlük yaşamın konforu ile Porsche karakterinin dengeli buluşması: Cayenne S, ister şehir ister uzun yol, her yolun hakkını verir.\n\n2.9L V6 Twin Turbo motor 440 HP ve 550 Nm üretiyor; Sport Chrono paketiyle 0–100 km/s 4.8 saniyede tamamlanıyor. 8 ileri Tiptronic S şanzıman ve Porsche Traction Management, bu performansı sürücüyle doğrudan konuşan bir hassasiyetle sunuyor.\n\nKum Beji tonu ve 24.800 kilometresiyle dengeli bir kullanım geçmişi var. Aile boyu hacmi ve otoban disiplinini aynı arada arayanlar için güçlü bir aday; incelemesi için bizimle iletişime geçebilirsiniz.',
   },
   {
     slug: 'range-rover-sport-p400',
@@ -129,7 +129,7 @@ export const vehicles: Vehicle[] = [
     ],
     status: 'Rezerve',
     condition: 'İkinci El',
-    description: 'Kendinden emin duruş, sofistike arazi yeteneği. Range Rover Sport, şehrin ve doğanın ortak dili.',
+    description: 'Kendinden emin duruş ve sofistike arazi yeteneği: Range Rover Sport, şehrin ve doğanın ortak dilidir.\n\n3.0L altı silindir Mild Hybrid motor 400 HP ve 550 Nm üretüyor; 5.9 saniyelik 0–100 km/s değeri bu boyut bir otomobil için etkileyici. Intelligent AWD çekiş sistemi ve 8 ileri otomatik şanzıman, asfaltta da toprakta da aynı güveni veriyor.\n\nSantorini Siyah gövdeli bu örnek şu anda rezerve edilmiş durumda; satış süreci sonuçlanmadan sizi bilgilendirmek isteriz. Benzer donanımdaki seçenekler için bize yazabilirsiniz.',
   },
   {
     slug: 'audi-rs6-avant',
@@ -161,7 +161,7 @@ export const vehicles: Vehicle[] = [
     featured: true,
     status: 'Satışta',
     condition: 'İkinci El',
-    description: 'Gündelik kullanışlılık ve nefes kesen performans. RS 6 Avant Performance, kendi ligının tek yarışçısı.',
+    description: 'Gündelik kullanışlılık ve nefes kesen performans: RS 6 Avant Performance, kendi ligünün tek yarışçısıdır.\n\n4.0L V8 TFSI Twin Turbo motor 630 HP ve 850 Nm üretiyor; 0–100 km/s yalnızca 3.4 saniye sürüyor. quattro çekiş sistemi ve 8 ileri tiptronic şanzıman bu gücü dört tekerleğe kesintisiz aktarırken, station wagon gövde ailenizle her yere gitmenizi sağlıyor.\n\nNardo Gri rengiyle ikonik duruşunu pekiştiren, yalnızca 6.200 kilometre yapmış bu örnek, koleksiyonumuzun en güçlü kartlarından biri. Showroom\'da görülebilir; test sürüşü için randevu alabilirsiniz.',
   },
   {
     slug: 'volvo-xc90-t8',
@@ -191,7 +191,7 @@ export const vehicles: Vehicle[] = [
     ],
     status: 'Satışta',
     condition: 'İkinci El',
-    description: 'İskandinav sadeliği ve aile yolculukları için dingin güç. XC90 T8, lüksu sessizce yaşar.',
+    description: 'İskandinav sadeliği, yedi koltuklu hacim ve dingin bir güç: XC90 T8, lüksü sessizce yaşayan aile SUV\'udur.\n\n2.0L Turbo motoru plug-in hibrit sistemle birleşip 455 HP sistem gücü üretiyor; 0–100 km/s 5.3 saniyede tamamlanıyor. 62 kilometrelik elektrikli menzil, günlük kullanımın büyük bölümünü sessiz ve tasarruflu hâle getiriyor.\n\nKristal Beyaz gövdesi ve 19.300 kilometresiyle geniş aileler için dingin bir seçenek. Detaylı inceleme ve şarj altyapısı hakkında bilgilenmek için bize ulaşabilirsiniz.',
   },
   {
     slug: 'mercedes-gle-300d-4matic',
@@ -221,7 +221,7 @@ export const vehicles: Vehicle[] = [
     ],
     status: 'Satışta',
     condition: 'İkinci El',
-    description: 'Uzun yolların konforu, şehrin ekonomisi. GLE 300 d, dizel rafinesinin modern yüzü.',
+    description: 'Uzun yolların konforu ve şehrin ekonomisi: GLE 300 d, dizel rafinesinin modern yüzüdür.\n\n2.0L dört silindir dizel motor 269 HP ve 550 Nm üretiyor; 9G-Tronic şanzıman ve 4MATIC çekiş sistemiyle uzun yolda dingin, şehirde 6.8 L/100 km tüketimle tasarruflu kalıyor. AMG Line dokunuşları dış görünüşe sportif bir karakter veriyor.\n\nSelenit Gri Metalik gövdesiyle 38.500 kilometrede; yoğun kullanıma hazır, ekonomik bir lüks SUV arayanlar için dengeli bir seçim. İncelemek üzere showroom\'umuza bekliyoruz.',
   },
   {
     slug: 'tesla-model-3-long-range',
@@ -252,7 +252,7 @@ export const vehicles: Vehicle[] = [
     featured: true,
     status: 'Satışta',
     condition: 'Sıfır',
-    description: 'Sıfır kilometre, sessiz güç. Model 3 Long Range, elektrikli lüksun en akılcı hâli.',
+    description: 'Sıfır kilometre, sessiz güç ve 629 kilometrelik menzil: Model 3 Long Range, elektrikli lüksün en akılcı hâlidir.\n\nDual Motor kurulumu 434 HP üretiyor ve 0–100 km/s hıza 4.4 saniyede ulaşıyor. 79 kWh batarya WLTP bazında 629 kilometre menzil sunuyor; 250 kW süper şarj desteğiyle duraklar kısa, yolculuk kesintisiz.\n\nKırmızı Multi Kat gövdesiyle teslim edilmeyi bekliyor; kilometresi yalnızca 50. Sıfır araç sahiplik deneyimini arayanlar için güvenle önereceğimiz bir seçim.',
   },
   {
     slug: 'mercedes-c-200-amg-line',
@@ -282,7 +282,7 @@ export const vehicles: Vehicle[] = [
     ],
     status: 'Satışta',
     condition: 'İkinci El',
-    description: 'AMG Line dokunuşuyla sportif bir sedan. C 200, her gün kullanılan bir lüks tanımı.',
+    description: 'AMG Line dokunuşuyla sportif bir sedan: C 200, her gün kullanılan lüksün tanımıdır.\n\n1.5L Turbo motor, 48V Mild Hybrid desteğiyle 204 HP üretiyor ve boost anlarında 20 HP ekliyor; 300 Nm tork 9G-Tronic şanzımanla yumuşak biçimde yola aktarılıyor. Arka itiş düzeni ve AMG Line detayları, klasik sedan deneyimini sportif bir tona taşıyor.\n\nPolar Beyaz gövdesi ve 15.200 kilometresiyle günlük kullanım için ideal bir denge. Şehir içi lüks arayanlar için koleksiyonumuzun en mantıklı başlangıç noktalarından biri.',
   },
   {
     slug: 'porsche-911-carrera-s-992',
@@ -312,7 +312,7 @@ export const vehicles: Vehicle[] = [
     ],
     status: 'Satıldı',
     condition: 'İkinci El',
-    description: 'Efsanenin modern yorumu. Bu 911 Carrera S, yeni sahibiyle mutlu bir yolculuğa çıktı.',
+    description: 'Efsanenin modern yorumu: 992 nesli Carrera S, saf sürüş keyfinin çağdaş tanımıdır.\n\n3.0L Flat-6 Twin Turbo motor 450 HP ve 530 Nm üretiyor; Sport Chrono paketiyle 0–100 km/s 3.5 saniye. 8 ileri PDK şanzıman ve arka itiş düzeni, 911\'e onlarca yıldır eşlik eden o doğrudan bağyı sürücüye hissettiriyor.\n\nGT Gümüş gövdeli, 31.000 kilometredeki bu örnek yeni sahibiyle buluştu ve mutlu bir yolculuğa çıktı. Benzer özel parçalar koleksiyonumuza girdiğinde ilk siz haberdar olmak için bize yazabilirsiniz.',
   },
   {
     slug: 'mini-cooper-s-classic',
@@ -342,7 +342,7 @@ export const vehicles: Vehicle[] = [
     ],
     status: 'Satışta',
     condition: 'İkinci El',
-    description: 'Şehrin ruh hâli. MINI Cooper S, karakterini her virajda gösterir.',
+    description: 'Şehrin ruh hâli, kompakt bir gövdede: MINI Cooper S, karakterini her virajda yeniden tanımlar.\n\n2.0L TwinPower Turbo motor 192 HP ve 300 Nm üretiyor; 7 ileri DCT şanzımanla 0–100 km/s 6.7 saniyede tamamlanıyor. Önden çekiş düzeni ve çevik süspansiyonu, dar sokaklarda ve park alanlarında işini kolaylaştırıyor.\n\nMoonwalk Gri gövdesi ve 21.500 kilometresiyle şehir içi kullanım için ekonomik ve keyifli bir seçenek. Yakından görmek için showroom\'umuza uğrayabilirsiniz.',
   },
   {
     slug: 'bmw-i4-m50',
@@ -372,6 +372,6 @@ export const vehicles: Vehicle[] = [
     ],
     status: 'Satışta',
     condition: 'İkinci El',
-    description: "M performansı, sıfır emisyon. i4 M50, elektrikli Gran Coupe'un en sportif hâli.",
+    description: "M performansı, sıfır emisyon: i4 M50, elektrikli Gran Coupé'nin en sportif hâlidir.\n\nDual Motor M xDrive kurulumu 544 HP üretiyor ve 0–100 km/s hıza 3.9 saniyede ulaşıyor. 83.9 kWh batarya 484 kilometre WLTP menzil sunuyor; 205 kW DC hızlı şarj desteğiyle uzun yol bile cesaret ister hâlden çıkıyor.\n\nMineral Gri gövdesi ve 9.800 kilometresiyle performansı elektrikle denemek isteyenler için koleksiyonumuzun en iddialı cevabı. Test sürüşü randevusu için bize ulaşabilirsiniz.",
   },
 ]

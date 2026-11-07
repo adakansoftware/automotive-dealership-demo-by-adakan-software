@@ -137,8 +137,8 @@ export function VehicleForm({
       </label>
     </div>
     <label>
-      <span>Açıklama</span>
-      <textarea name="description" rows={3} defaultValue={values.description}/>
+      <span>Açıklama — ilk paragraf arama sonuçlarında ve sosyal paylaşımlarda özet olarak kullanılır; paragrafları boş bir satırla ayırın</span>
+      <textarea name="description" rows={6} defaultValue={values.description}/>
     </label>
     <label>
       <span>Görseller — her satır: <code>url | açıklama</code> (ilk satır anahtar görsel)</span>

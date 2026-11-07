@@ -3,7 +3,7 @@ import { notFound } from 'next/navigation'
 import { VehicleCard } from '@/components/vehicles/vehicle-card'
 import { InquiryBar } from '@/components/vehicles/inquiry-bar'
 import { VehicleGallery } from '@/components/vehicles/vehicle-gallery'
-import { getVehicles, getVehicleBySlug, getVehicleImages, getRelatedVehicles } from '@/lib/vehicles'
+import { getVehicles, getVehicleBySlug, getVehicleImages, getRelatedVehicles, getVehicleSummary } from '@/lib/vehicles'
 import { formatPrice, formatMileage } from '@/lib/format'
 import { getSiteConfig } from '@/lib/site-config'
 import type { VehicleStatus } from '@/types/vehicle'
@@ -24,20 +24,21 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const vehicle = await getVehicleBySlug(slug)
   if (!vehicle) return { title: 'Araç bulunamadı' }
   const title = `${vehicle.brand} ${vehicle.model} ${vehicle.trim}`
+  const summary = getVehicleSummary(vehicle)
   return {
     title,
-    description: vehicle.description,
+    description: summary,
     alternates: { canonical: `/araclar/${slug}` },
     openGraph: {
       title,
-      description: vehicle.description,
+      description: summary,
       url: `/araclar/${slug}`,
       images: [{ url: vehicle.image }],
     },
     twitter: {
       card: 'summary_large_image',
       title,
-      description: vehicle.description,
+      description: summary,
       images: [vehicle.image],
     },
   }
@@ -52,7 +53,8 @@ export default async function VehicleDetail({ params }: { params: Promise<{ slug
   const siteConfig = await getSiteConfig()
   const galleryTitle = `${vehicle.brand} ${vehicle.model} ${vehicle.trim}`
   const baseSpecs = ([['Yıl', vehicle.year], ['Kilometre', formatMileage(vehicle.mileage)], ['Yakıt', vehicle.fuel], ['Vites', vehicle.transmission], ['Kasa', vehicle.body], ['Renk', vehicle.color], ...(vehicle.condition ? [['Durumu', vehicle.condition] as const] : []), ['Fiyat', formatPrice(vehicle.price)]] as const).filter(([, value]) => value !== undefined && value !== '')
-  const specs = [...baseSpecs, ...(vehicle.specs ?? []).map((spec) => [spec.label, spec.value] as [string, string])]
+  const paragraphs = vehicle.description.split(/\n{2,}/).map((paragraph) => paragraph.trim()).filter(Boolean)
+  const specs = [...baseSpecs, ...(vehicle.specs ?? []).map((spec) => [spec.label, spec.value] as [string, string]), ['Referans', vehicle.slug]]
   const absoluteImage = (url: string) => url.startsWith('http') ? url : `${siteConfig.url}${url}`
   const vehicleJsonLd = {
     '@context': 'https://schema.org',
@@ -62,6 +64,10 @@ export default async function VehicleDetail({ params }: { params: Promise<{ slug
     model: vehicle.model,
     productionDate: String(vehicle.year),
     color: vehicle.color,
+    description: getVehicleSummary(vehicle),
+    fuelType: vehicle.fuel,
+    bodyType: vehicle.body,
+    vehicleTransmission: vehicle.transmission,
     image: absoluteImage(vehicle.image),
     mileageFromOdometer: { '@type': 'QuantitativeValue', value: vehicle.mileage, unitCode: 'KMT' },
     ...(vehicle.condition ? { itemCondition: vehicle.condition === 'Sıfır' ? 'https://schema.org/NewCondition' : 'https://schema.org/UsedCondition' } : {}),
@@ -80,7 +86,7 @@ export default async function VehicleDetail({ params }: { params: Promise<{ slug
         <span className="eyebrow">{vehicle.brand} · {vehicle.year}</span>
         {vehicle.status && <span className={`status-badge${vehicle.status === 'Rezerve' ? ' reserved' : ''}`}>{vehicle.status}</span>}
         <h1>{vehicle.model}<br/><span>{vehicle.trim}</span></h1>
-        <p>{vehicle.description}</p>
+        {paragraphs.map((paragraph, index) => <p key={index}>{paragraph}</p>)}
         <div className="detail-price">{formatPrice(vehicle.price)}</div>
         <InquiryBar vehicle={vehicle}/>
       </div>

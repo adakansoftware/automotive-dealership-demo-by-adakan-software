@@ -5,6 +5,7 @@ import {
   getRelatedVehicles,
   getVehicleBySlug,
   getVehicleImages,
+  getVehicleSummary,
   getVehicles,
   sortVehicles,
 } from '@/lib/vehicles'
@@ -69,6 +70,25 @@ describe('getVehicleImages', () => {
     const vehicle = makeVehicle()
     const images = getVehicleImages(vehicle)
     expect(images).toEqual([{ url: '/test.jpg', alt: 'BMW 5 Serisi' }])
+  })
+})
+
+describe('getVehicleSummary', () => {
+  it('çok paragraflı açıklamada ilk paragrafı döner', () => {
+    const vehicle = makeVehicle({ description: 'İlk paragraf.\n\nİkinci paragraf.\n\nÜçüncü paragraf.' })
+    expect(getVehicleSummary(vehicle)).toBe('İlk paragraf.')
+  })
+
+  it('160 karakteri aşan ilk paragrafı cümle sınırında kısaltır', () => {
+    const long = 'Bu ilk cümle oldukça uzun bir açıklama paragrafının başlangıcıdır. '.repeat(4) + 'Ve son bir cümle daha eklenmiştir burada.'
+    const summary = getVehicleSummary(makeVehicle({ description: long }))
+    expect(summary.length).toBeLessThanOrEqual(160)
+    expect(summary.endsWith('.')).toBe(true)
+  })
+
+  it('tek paragraflık açıklamayı aynen geçirir', () => {
+    const short = 'Tek cümlelik kısa açıklama.'
+    expect(getVehicleSummary(makeVehicle({ description: short }))).toBe(short)
   })
 })
 

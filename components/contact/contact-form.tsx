@@ -11,7 +11,7 @@ export function ContactForm() {
     return <div className="intro-copy" role="status">
       <span className="eyebrow">Teşekkürler</span>
       <h3>Mesajınız alındı.</h3>
-      <p>Sorgunuz doğrulandı. Bu frontend demosunda gerçek gönderim yapılmaz; gönderim sağlayıcısı onay sonrası devreye alınacaktır.</p>
+      <p>Sorgunuz kaydedildi; ekibimiz en kısa sürede sizinle iletişime geçecek.</p>
     </div>
   }
 
@@ -34,6 +34,6 @@ export function ContactForm() {
       {state.errors.message && <span id="message-error" className="form-error" role="alert">{state.errors.message}</span>}
     </label>
     <button type="submit" disabled={pending}>{pending ? 'Gönderiliyor…' : 'Mesaj gönder'}</button>
-    <small style={{ color: '#777b7e', lineHeight: 1.5 }}>Bu form demo amaçlıdır; doğrulama ve rate limit mimarisi üretim gönderimine hazırdır.</small>
+    <small style={{ color: '#777b7e', lineHeight: 1.5 }}>Bilgileriniz yalnızca talebinize dönüş yapmak için kullanılır.</small>
   </form>
 }

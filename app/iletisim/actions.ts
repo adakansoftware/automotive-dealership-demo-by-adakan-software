@@ -4,6 +4,8 @@ import { headers } from 'next/headers'
 
 import { getDb, isDbConfigured } from '@/db'
 import { inquiries as inquiriesTable } from '@/drizzle/schema'
+import { sendInquiryEmail } from '@/lib/email'
+import { getSiteConfig } from '@/lib/site-config'
 import { checkRateLimit, hashIdentifier } from '@/lib/rate-limit'
 import type { InquiryFormState } from './inquiry-state'
 import { validateInquiry } from './validation'
@@ -38,7 +40,6 @@ export async function submitInquiry(_prev: InquiryFormState, formData: FormData)
   }
 
   // DB yapılandırılmışsa sorgu kalıcı olarak kaydedilir (admin panelde görünür).
-  // E-posta gönderimi ayrı karardır: SMTP sağlayıcısı onay sonrası bağlanır.
   if (isDbConfigured()) {
     const db = getDb()
     await db.insert(inquiriesTable).values({
@@ -51,6 +52,10 @@ export async function submitInquiry(_prev: InquiryFormState, formData: FormData)
       ipHash: hashIdentifier(ip),
     })
   }
+
+  // SMTP tanımlıysa bildirim gönderilir; hata formu bozmaz, sorgu tabloda.
+  const site = await getSiteConfig()
+  await sendInquiryEmail(values, site.brand.name)
 
   return { status: 'success', errors: {}, values: EMPTY_VALUES }
 }

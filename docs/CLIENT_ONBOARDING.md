@@ -67,7 +67,7 @@ corepack pnpm db:seed      # envanter + site_config + ilk admin
 | `HASH_PEPPER` | 32+ bayt rastgele — rate limit/IP özeti tuzu |
 | `ADMIN_INITIAL_EMAIL` / `ADMIN_INITIAL_PASSWORD` | Yalnız seed'de okunur |
 | `NEXT_PUBLIC_SITE_URL` | Gerçek alan adı (siteConfig.url karşılığı) |
-| `SMTP_*`, `INQUIRY_NOTIFY_EMAIL` | Bildirim e-postası için (opsiyonel) |
+| `SMTP_*`, `INQUIRY_NOTIFY_EMAIL` | Bildirim e-postası (opsiyonel, Resend: `smtp.resend.com`/465, kullanıcı `resend`, şifre API anahtarı; `SMTP_FROM` doğrulanmış alan adı adresi) |
 
 ## 6. Deploy
 

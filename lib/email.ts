@@ -58,7 +58,9 @@ export async function sendInquiryEmail(
   try {
     const transporter = nodemailer.createTransport(transporterOptions())
     await transporter.sendMail({
-      from: process.env.SMTP_USER ?? process.env.INQUIRY_NOTIFY_EMAIL,
+      // Sağlayıcı geneli: Resend'te doğrulanmış alan adı adresi gerekir
+      // (ör. no-reply@galeriadi.com) — SMTP_USER yalnızca kimlik bilgisi.
+      from: process.env.SMTP_FROM ?? process.env.SMTP_USER ?? process.env.INQUIRY_NOTIFY_EMAIL,
       to: process.env.INQUIRY_NOTIFY_EMAIL,
       replyTo: values.email || undefined,
       subject,

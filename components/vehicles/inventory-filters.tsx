@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { SelectField, type SelectFieldOption } from '@/components/ui/select-field'
 
@@ -42,8 +42,13 @@ interface RangeFieldProps {
 function RangeField({ label, min, max, minPlaceholder = 'En düşük', maxPlaceholder = 'En yüksek', onCommit }: RangeFieldProps) {
   const [localMin, setLocalMin] = useState(min)
   const [localMax, setLocalMax] = useState(max)
+  const [prevMin, setPrevMin] = useState(min)
+  const [prevMax, setPrevMax] = useState(max)
 
-  useEffect(() => { setLocalMin(min); setLocalMax(max) }, [min, max])
+  // URL'den gelen prop değişimini senkronla — React'in "render sırasında
+  // state ayarla" deseni (https://react.dev/learn/you-might-not-need-an-effect).
+  if (min !== prevMin) { setPrevMin(min); setLocalMin(min) }
+  if (max !== prevMax) { setPrevMax(max); setLocalMax(max) }
 
   const commit = () => {
     if (localMin !== min || localMax !== max) onCommit(localMin.trim(), localMax.trim())

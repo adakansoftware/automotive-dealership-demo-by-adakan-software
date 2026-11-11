@@ -51,6 +51,8 @@ export function VehicleGallery({ images, title }: VehicleGalleryProps) {
       {images.map((image, i) => <button key={image.url} className={i === index ? 'active' : ''} role="tab" aria-selected={i === index} aria-label={`Görsel ${i + 1}`} onClick={() => setIndex(i)}><Image src={image.url} alt={image.alt ?? `${title} — görsel ${i + 1}`} fill sizes="88px"/></button>)}
     </div>}
     {fullscreen && <div className="gallery-fullscreen" role="dialog" aria-modal="true" aria-label={`${title} — tam ekran galeri`} onClick={() => setFullscreen(false)}>
+      {/* Tam ekranda ham çözünürlük — next/image optimizasyonu bilinçli kullanılmıyor */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
       <img src={current.url} alt={alt} onClick={(e) => e.stopPropagation()}/>
       <button className="gallery-close" aria-label="Tam ekrandan çık" onClick={() => setFullscreen(false)}><X size={26}/></button>
       {multiple && <>

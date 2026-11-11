@@ -1,4 +1,4 @@
-import { desc, eq } from 'drizzle-orm'
+import { desc } from 'drizzle-orm'
 
 import { setInquiryStatus } from '@/app/(admin)/admin/actions'
 import { getDb, isDbConfigured } from '@/db'

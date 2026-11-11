@@ -75,7 +75,7 @@ yapılır.
 | `corepack pnpm build` | Üretim derlemesi |
 | `corepack pnpm start` | Üretim sunucusu |
 | `corepack pnpm typecheck` | `tsc --noEmit` |
-| `corepack pnpm test` | Vitest (35 birim testi) |
+| `corepack pnpm test` | Vitest (40 birim testi) |
 | `corepack pnpm db:generate` | Drizzle migration üret |
 | `corepack pnpm db:migrate` | Migration uygula |
 | `corepack pnpm db:seed` | Tohum betiği |
@@ -99,12 +99,19 @@ docs/                   Uygulama planı, mimari denetim, sistem tasarımı
 - `docs/ARCHITECTURE_AUDIT.md` — başlangıç denetimi (bulgu kodları)
 - `docs/FUTURE_SYSTEM_DESIGN.md` — veri katmanı/auth/admin tasarımı
 - `docs/RESPONSIVE_AUDIT.md` — responsive kontrol listesi + KVKK planı
+- `docs/CLIENT_ONBOARDING.md` — müşteri başına uyarlama kontrol listesi
+
+## Canlı Dağıtım
+
+Demo kurulum canlıda: https://galeridemobyadakansofttware.vercel.app —
+Vercel (GitHub entegrasyonu, push = otomatik deploy) + Neon PostgreSQL.
+E-posta bildirimleri SMTP env'leriyle (Resend uyumlu) açılır; ayrıntılar
+`.env.example`.
 
 ## Dağıtım Ön Koşulları
 
 Gerçek müşteri teslimi öncesi: alan adı + TLS (`site_config.url` güncellenir),
-PostgreSQL örneği, SMTP sağlayıcı kararı (form bildirimleri), gerçek
-iletişim bilgileri. Ayrıntılar:
+gerçek iletişim bilgileri, SMTP kimlik bilgileri (kod hazır, env bekler). Ayrıntılar:
 `docs/FUTURE_SYSTEM_DESIGN.md` §7.
 
 ## Lisans

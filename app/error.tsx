@@ -8,6 +8,6 @@ export default function Error({ reset }: { error: Error & { digest?: string }; r
     <span className="eyebrow">Beklenmeyen bir hata</span>
     <h1 className="page-title">Bir aksilik<br/>oluştu.</h1>
     <p className="intro-copy">Sayfayı görüntülerken bir sorun yaşandı. Lütfen tekrar deneyin; sorun sürerse <Link href="/iletisim" className="text-link">bize ulaşın</Link>.</p>
-    <div className="status-actions"><button className="button primary" onClick={reset}>Tekrar dene <RotateCcw size={16}/></button><a href="/" className="button">Ana sayfa <ArrowUpRight size={16}/></a></div>
+    <div className="status-actions"><button className="button primary" onClick={reset}>Tekrar dene <RotateCcw size={16}/></button><Link href="/" className="button">Ana sayfa <ArrowUpRight size={16}/></Link></div>
   </main>
 }

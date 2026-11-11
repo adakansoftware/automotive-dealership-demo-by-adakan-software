@@ -20,8 +20,8 @@ export async function Footer() {
         </div>
         <div>
           <span className="eyebrow">İletişim</span>
-          <span>{siteConfig.contact.phone}</span>
-          <span>{siteConfig.contact.email}</span>
+          <a href={siteConfig.contact.phoneHref}>{siteConfig.contact.phone}</a>
+          <a href={`mailto:${siteConfig.contact.email}`}>{siteConfig.contact.email}</a>
           <span>{siteConfig.contact.address}</span>
         </div>
       </div>

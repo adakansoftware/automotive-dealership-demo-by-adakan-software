@@ -150,7 +150,7 @@ export function VehicleForm({
     </label>
     <label className="admin-check">
       <input type="checkbox" name="featured" defaultChecked={values.featured}/>
-      <span>Öne çıkan (anasayfa "Küratörün seçimi")</span>
+      <span>Öne çıkan (anasayfa &quot;Küratörün seçimi&quot;)</span>
     </label>
     {state.error && <p role="alert" className="admin-form-error">{state.error}</p>}
     <button type="submit" className="button primary" disabled={pending}>

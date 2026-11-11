@@ -29,6 +29,11 @@ export async function submitInquiry(_prev: InquiryFormState, formData: FormData)
     return { status: 'error', errors, values }
   }
 
+  // Honeypot: görünmez alanı bot doldurduysa başarı gibi davran, hiçbir şey kaydetme.
+  if (String(formData.get('website') ?? '').trim() !== '') {
+    return { status: 'success', errors: {}, values: EMPTY_VALUES }
+  }
+
   const requestHeaders = await headers()
   const ip = (requestHeaders.get('x-forwarded-for') ?? 'local').split(',')[0].trim()
   const withinLimit = await checkRateLimit(`inquiry:${ip}`, {

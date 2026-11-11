@@ -17,16 +17,18 @@ export function ContactForm() {
 
   return <form className="contact-form" action={formAction}>
     {state.status === 'rate-limited' && <p className="form-error" role="alert">Çok fazla deneme yaptınız. Lütfen 10 dakika sonra tekrar deneyin.</p>}
+    {/* Honeypot: botlar doldurur, insanlar görmez — doluysa gönderim sessizce yok sayılır */}
+    <input type="text" name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" style={{ position: 'absolute', left: '-9999px', height: 0, width: 0, opacity: 0 }}/>
     <label>Ad Soyad
-      <input name="name" required minLength={2} defaultValue={state.values.name} placeholder="Adınız ve soyadınız" aria-invalid={state.errors.name ? true : undefined} aria-describedby={state.errors.name ? 'name-error' : undefined}/>
+      <input name="name" required minLength={2} autoComplete="name" defaultValue={state.values.name} placeholder="Adınız ve soyadınız" aria-invalid={state.errors.name ? true : undefined} aria-describedby={state.errors.name ? 'name-error' : undefined}/>
       {state.errors.name && <span id="name-error" className="form-error" role="alert">{state.errors.name}</span>}
     </label>
     <label>Telefon
-      <input name="phone" required defaultValue={state.values.phone} placeholder="+90 5xx xxx xx xx" aria-invalid={state.errors.phone ? true : undefined} aria-describedby={state.errors.phone ? 'phone-error' : undefined}/>
+      <input name="phone" type="tel" required autoComplete="tel" defaultValue={state.values.phone} placeholder="+90 5xx xxx xx xx" aria-invalid={state.errors.phone ? true : undefined} aria-describedby={state.errors.phone ? 'phone-error' : undefined}/>
       {state.errors.phone && <span id="phone-error" className="form-error" role="alert">{state.errors.phone}</span>}
     </label>
     <label>E-posta
-      <input name="email" type="email" required defaultValue={state.values.email} placeholder="ornek@mail.com" aria-invalid={state.errors.email ? true : undefined} aria-describedby={state.errors.email ? 'email-error' : undefined}/>
+      <input name="email" type="email" required autoComplete="email" defaultValue={state.values.email} placeholder="ornek@mail.com" aria-invalid={state.errors.email ? true : undefined} aria-describedby={state.errors.email ? 'email-error' : undefined}/>
       {state.errors.email && <span id="email-error" className="form-error" role="alert">{state.errors.email}</span>}
     </label>
     <label>Mesajınız
